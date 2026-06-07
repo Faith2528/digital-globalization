@@ -2326,8 +2326,8 @@ body.blue-tech-mode .footer-links-mini a {
 }
 
 body.blue-tech-mode #bg-canvas {
-  opacity: 0.05;
-  /* Fade out the vector lines so it doesn't look messy */
+  opacity: 0.35;
+  /* Make the vector lines beautiful and visible in light mode */
 }
 
 /* --- Developer Cards Apechain Style --- */
@@ -2390,7 +2390,7 @@ body.blue-tech-mode .dev-deck-title .title-sub {
 
 .dev-cards-track {
   display: flex;
-  gap: 3.5rem;
+  gap: 1.8rem;
   padding-left: calc(50vw - 160px); /* Centers the first card horizontally */
   padding-right: calc(50vw - 160px); /* Centers the last card horizontally */
   align-items: center;

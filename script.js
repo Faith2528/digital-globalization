@@ -1600,10 +1600,15 @@ initNavScroll();
 
   function animateLines() {
     ctx.clearRect(0, 0, w, h);
-    lines.forEach(line => {
+    const isLightMode = document.body.classList.contains('blue-tech-mode');
+    lines.forEach((line, i) => {
       line.phase += line.speed;
       ctx.beginPath();
-      ctx.strokeStyle = line.color;
+      if (isLightMode) {
+        ctx.strokeStyle = i % 2 === 0 ? 'rgba(11, 79, 198, 0.22)' : 'rgba(255, 0, 127, 0.16)';
+      } else {
+        ctx.strokeStyle = line.color;
+      }
       ctx.lineWidth = 1;
       for (let x = 0; x < w; x += 50) {
         const y = line.y + Math.sin(x * 0.0015 + line.phase) * line.amplitude + Math.cos(x * 0.0008 - line.phase * 0.6) * (line.amplitude * 0.6);
