@@ -359,42 +359,55 @@ function renderTopicLongform(t){
   const p3 = pages[3] || p0;
   const bullets = [p1, p2, p3].flatMap(p => p.bullets || []);
   const collage = topicCollageImages(t);
+  const topicNum = String(TOPICS.indexOf(t) + 1).padStart(2, '0');
 
   const singleCard = `
     <section class="topic-panel">
+      <!-- Section 1: Hero Block -->
       <div class="topic-showcase-head">
-        <div>
-          <div class="topic-kicker">${t.tag}</div>
-          <h3>${t.label}</h3>
-          <div class="topic-kicker">Background</div>
-          ${(p0.paragraphs || [p0.text || t.desc]).slice(0,3).map(txt => `<p class="page-para">${txt}</p>`).join('')}
-        </div>
-        <div class="topic-panel-media" style="--topic-accent:${t.color}">
-          <img src="${topicImgUrl(t.image, 1200)}" data-fallback="https://picsum.photos/seed/dg-${t.id}-hero/1200/800" alt="${t.imageAlt || t.label}" loading="eager" decoding="async" fetchpriority="high" referrerpolicy="no-referrer" />
-          <div class="topic-hero-stat">
-            <div class="topic-hero-stat-inner">
-              <span class="topic-hero-stat-num">${t.stat}</span>
-              <span class="topic-hero-stat-label">${t.statLabel}</span>
-            </div>
+        <div class="topic-panel-media-wrap">
+          <div class="topic-panel-media" style="--topic-accent:${t.color}">
+            <img src="${topicImgUrl(t.image, 1200)}" data-fallback="https://picsum.photos/seed/dg-${t.id}-hero/1200/800" alt="${t.imageAlt || t.label}" loading="eager" decoding="async" fetchpriority="high" referrerpolicy="no-referrer" />
           </div>
         </div>
+        
+        <div>
+          <div class="blueprint-tag">[ ${topicNum} / ${t.tag.toUpperCase()} ]</div>
+          <h3>${t.label}</h3>
+          
+          <div class="blueprint-spec-box">
+            <span class="blueprint-spec-value">${t.stat}</span>
+            <span class="blueprint-spec-label">${t.statLabel}</span>
+          </div>
+          
+          <div class="blueprint-tag" style="color: var(--accent-pink); margin-top: 1rem;">[ BACKGROUND SPECS ]</div>
+          ${(p0.paragraphs || [p0.text || t.desc]).slice(0,3).map(txt => `<p class="page-para">${txt}</p>`).join('')}
+        </div>
       </div>
+      
+      <!-- Section 2: Methodology Block -->
       <div class="topic-row topic-row-b">
+        <div>
+          <div class="blueprint-tag">[ 02 / PRACTICE ]</div>
+          <h3>${p1.title} in Practice</h3>
+          ${(p1.paragraphs || [p1.text || '']).slice(0,2).map(txt => `<p class="page-para">${txt}</p>`).join('')}
+          <ul class="blueprint-bullet-list">
+            ${(p1.bullets || []).slice(0,3).map(b => `<li>${b}</li>`).join('')}
+          </ul>
+        </div>
+        
         <div class="topic-collage">
           ${collage.map((item, i) => `
             <div><img src="${item.src}" data-fallback="${item.fallback}" data-collage-idx="${i}" alt="${item.alt}" loading="eager" decoding="async" referrerpolicy="no-referrer" /></div>
           `).join('')}
         </div>
-        <div class="topic-row-copy">
-          <div class="topic-kicker">${p1.title}</div>
-          <h3>${p1.title} in Practice</h3>
-          ${(p1.paragraphs || [p1.text || '']).slice(0,2).map(txt => `<p class="page-para">${txt}</p>`).join('')}
-          <ul class="page-bullets">${(p1.bullets || []).slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul>
-        </div>
       </div>
-      <div class="topic-kicker">Key Applications</div>
-      <h3>${p2.title} and ${p3.title}</h3>
+      
+      <!-- Section 3: Applications & Integrations -->
+      <div class="blueprint-section-title">03 / KEY APPLICATIONS & INTEGRATIONS</div>
+      <h3 style="margin-bottom: 1.5rem; text-transform: uppercase;">${p2.title} and ${p3.title}</h3>
       ${(p2.paragraphs || [p2.text || '']).slice(0,1).map(txt => `<p class="page-para">${txt}</p>`).join('')}
+      
       <div class="topic-services-grid">
         ${[0,1,2,3].map(i => `
           <article class="topic-feature">
@@ -444,15 +457,27 @@ function wireTopicImage3D(){
   targets.forEach(el => {
     if(el.dataset.tiltBound) return;
     el.dataset.tiltBound = '1';
+    
+    const isHero = el.classList.contains('topic-panel-media');
+    
     el.addEventListener('mousemove', ev => {
       const r = el.getBoundingClientRect();
       const px = (ev.clientX - r.left) / r.width;
       const py = (ev.clientY - r.top) / r.height;
-      const rx = (0.5 - py) * 7;
-      const ry = (px - 0.5) * 9;
-      el.style.transform = `perspective(950px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
-      el.style.boxShadow = '0 14px 30px rgba(0,0,0,0.3)';
+      
+      if (isHero) {
+        const rx = 8 + (0.5 - py) * 6;
+        const ry = -14 + (px - 0.5) * 8;
+        el.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(1deg) translateY(-8px)`;
+        el.style.boxShadow = '0 40px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 240, 255, 0.2)';
+      } else {
+        const rx = -8 + (0.5 - py) * 5;
+        const ry = 15 + (px - 0.5) * 7;
+        el.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;
+        el.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 0, 128, 0.15)';
+      }
     });
+    
     el.addEventListener('mouseleave', () => {
       el.style.transform = '';
       el.style.boxShadow = '';
